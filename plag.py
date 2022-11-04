@@ -1,11 +1,79 @@
-from flask import Flask, request, render_template
+import os
+from flask import Flask, request, render_template,redirect, url_for, send_from_directory
+from werkzeug.utils import secure_filename
 import re
 import math
-
+import language_tool_python
 app = Flask("__name__")
+app.config['UPLOAD_FOLDER'] = 'uploads/'
+ALLOWED_EXTENSIONS = set(['txt'])
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+def wordcount(filename, find_word):
+    file = open(app.config['UPLOAD_FOLDER'] + filename, 'r').read()
+    count = 0
+    words = file.split()
+    for word in words:
+        if(word == find_word):
+            count += 1
+    return count
 q = ""
+@app.route('/grammar',methods=['POST'])
+def grammar():
+	if request.method=='POST':
+		inputQuery = request.form['query']
+		my_tool=language_tool_python.LanguageTool('en-US')
+		my_matches=my_tool.check(inputQuery)
+		myMistakes=[]
+		myCorrections=[]
+		startPositions=[]
+		endPositions=[]
+		for rules in my_matches:
+			if len(rules.replacements)>0:
+				startPositions.append(rules.offset)
+				endPositions.append(rules.errorLength + rules.offset)
+				myMistakes.append(inputQuery[rules.offset: rules.errorLength + rules.offset])
+				myCorrections.append(rules.replacements[0])
+		my_NewText = list(inputQuery)
+		for n in range(len(startPositions)):  
+			for i in range(len(inputQuery)):
+				my_NewText[startPositions[n]] = myCorrections[n]
+				if (i > startPositions[n] and i < endPositions[n]):
+					my_NewText[i] = ""
+		my_NewText = "".join(my_NewText)
+		return render_template('grammar.html',output=my_matches,my_NewText=my_NewText)
+	return render_template('grammar.html',output="")
+@app.route('/checkcount', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        file = request.files['file']
+        word = request.form['word']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(app.config['UPLOAD_FOLDER'] + filename)
+            count = str(wordcount(filename, word))
+            os.remove(app.config['UPLOAD_FOLDER'] + filename)
+            return render_template('checkCount.html',
+                                   filename = filename,
+                                   word = word,
+                                   count = count)
 
+    return render_template('checkCount.html', count = None)
+@app.route('/grammar')
+def loadgrammar():
+	return render_template('grammar.html',query="")
+@app.route("/login")
+def loadlogin():
+	return render_template('login.html', query="")
+@app.route("/choose")
+def loadchoose():
+	return render_template('choose.html', query="")
+@app.route("/checkcount")
+def loadcheckCount():
+	return render_template('checkCount.html', query="")
 @app.route("/")
 def loadPage():
 	return render_template('index.html', query="")
@@ -93,4 +161,8 @@ def cosineSimilarity():
 		output = "Please Enter Valid Data"
 		return render_template('index.html', query=inputQuery, output=output)
 
-app.run()
+if __name__ == "__main__":
+    if(not os.path.isdir(app.config['UPLOAD_FOLDER'])):
+        os.makedirs(app.config['UPLOAD_FOLDER']) #Create upload-folder if it does not exist
+
+    app.run(host='localhost', debug = True) # Start the app

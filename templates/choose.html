@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <style>
+    * {
+      background-color: lightsteelblue;
+      font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+        "Lucida Sans", sans-serif;
+    }
+    .button1 {
+      margin: auto;
+      text-align: center;
+      position: fixed;
+      top: 40%;
+      left: 40%;
+      width: 300px;
+      height: 100px;
+      background: lightpink;
+      border-radius: 20px;
+      transition: 0.5s;
+      font-size: 20px;
+    }
+    .button2 {
+      margin: auto;
+      text-align: center;
+      position: fixed;
+      top: 20%;
+      left: 40%;
+      width: 300px;
+      height: 100px;
+      background: lightpink;
+      border-radius: 20px;
+      transition: 0.5s;
+      font-size: 20px;
+    }
+    .button3 {
+      margin: auto;
+      text-align: center;
+      position: fixed;
+      top: 60%;
+      left: 40%;
+      width: 300px;
+      height: 100px;
+      background: lightpink;
+      border-radius: 20px;
+      transition: 0.5s;
+      font-size: 20px;
+    }
+  </style>
+  <body>
+    <title>Plagspell</title>
+    <div class="buttons">
+      <div class="action_btn">
+        <button
+          class="button1"
+          type="submit"
+          onclick="window.location.href = '/'"
+        >
+          Check Plagiarism
+        </button>
+        <button
+          class="button2"
+          type="submit"
+          onclick="window.location.href = '/checkcount'"
+        >
+          Check Word Count
+        </button>
+        <button
+          class="button3"
+          type="submit"
+          onclick="window.location.href = '/grammar'"
+        >
+          Check Grammar
+        </button>
+
+        <p id="saved"></p>
+      </div>
+    </div>
+  </body>
+</html>

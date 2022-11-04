@@ -1,13 +1,61 @@
-<home>
+<!DOCTYPE html>
+<html>
+   <style>
+      * {
+        margin: 5px;
+        padding: 5px;
+        font-family: sans-serif;
+      }
+      body {
+         background-color: lightblue;
+      }
+      .submit{
+         left:30px;
+       position: relative;
+        width: 300px;
+        height: 50px;
+        background: linear-gradient(to right, lightgreen, yellow);
+        border-radius: 30px;
+        transition: 0.5s;
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', sans-serif;
+      }
+      .input{
+         width: 300px;
+         height: 70px;
+         font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', sans-serif;
+         font-size: 50px;
+      }
+      .file{
+         left:20%;
+         font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', sans-serif;
+         background-color: white;
+      }
+      .text{
+         margin-left: 25px;
+      }
+      .output{
+         left:50px;
+         margin-left: 500px;
+         padding: auto;
+         font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', sans-serif;
+      }
+      .file{
+         margin-left: 40px;
+         left:50px;
+      }
+   </style>
    <body>
       <title>Plagiarism Checker</title>
       <form action="http://localhost:5000" method="POST">
-         <p>Input Text : </p>
-         <p><textarea name="query" rows="8" cols="50" autofocus>{{query}}</textarea></p>
+         <p class="input" style="color:black; text-align:center; ">Enter Data</p>
+         <p class="text"><textarea name="query" rows="8" cols="50" autofocus>{{query}}</textarea></p>
          <br>
-         <p><input type="submit" name="submit" value="CHECK PLAGIARISM"></p>
+         <p><input type="submit" class ="submit" name="submit" value="CHECK PLAGIARISM"></p>
          <br>
-         <p><h3>{{output}}</h3></p>
+         <form action="/action_page.php">
+         <input class="file" type="file" id="myFile" name="filename">
+         </form>
+         <p class="output"><h3>{{output}}</h3></p>
       </form>
    </body>
-</home>
+</html>
